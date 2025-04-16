@@ -47,16 +47,21 @@
       .then(response => response.json())
       .then(data => {
         const container = document.getElementById("content");
-        container.innerHTML = ""; // очистить загрузку
+        container.innerHTML = ""; // Очистить загрузку
 
-        data.forEach(item => {
+        data.forEach(row => {
+          const title = row["Pin Title"];
+          const description = row["Pin Description"];
+          const img = row["Img"];
+          const link = row["Partner link"];
+
           const card = document.createElement("div");
           card.className = "card";
           card.innerHTML = `
-            <h2>${item["Pin Title"]}</h2>
-            <img src="${item["Img"]}" alt="${item["Pin Title"]}" />
-            <p>${item["Pin Description"]}</p>
-            <a href="${item["Partner link"]}" target="_blank">Download on Creative Fabrica</a>
+            <h2>${title}</h2>
+            <img src="${img}" alt="${title}" />
+            <p>${description}</p>
+            <a href="${link}" target="_blank">Download on Creative Fabrica</a>
           `;
           container.appendChild(card);
         });
