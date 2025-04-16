@@ -7,29 +7,57 @@
     body {
       font-family: Arial, sans-serif;
       background-color: #fef3e7;
+      margin: 0;
       padding: 20px;
     }
-    .card {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    img {
-      max-width: 100%;
-      border-radius: 8px;
-    }
-    h2 {
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
       color: #333;
     }
-    p {
-      color: #555;
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    .btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 15px;
+
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .card img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      margin: 0 0 0.5rem 0;
+      color: #333;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #555;
+      flex-grow: 1;
+    }
+
+    .card a {
+      text-align: center;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
       background-color: #ff7043;
       color: white;
       text-decoration: none;
@@ -38,15 +66,33 @@
   </style>
 </head>
 <body>
-
   <h1>Free Crochet Patterns</h1>
+  <div class="grid" id="content"></div>
 
-  <div class="card">
-    <h2>Crochet Zebra Amigurumi – Adorable & Easy Pattern</h2>
-    <img src="assets/zebra-pin-new1.jpg" alt="Crochet Zebra Amigurumi">
-    <p>Learn how to crochet this cute zebra amigurumi with our easy step-by-step pattern!</p>
-    <a class="btn" href="https://www.creativefabrica.com/product/crochet-zebra-amigurumi/ref/3790420/">Download on Creative Fabrica</a>
-  </div>
+  <script>
+    function loadData() {
+      google.script.run.withSuccessHandler(function(data) {
+        const container = document.getElementById("content");
+        data.slice(1).forEach(function(row) {
+          const title = row[0];
+          const description = row[1];
+          const url = row[2];
+          const imageName = row[3];
+          const partnerLink = row[4];
 
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <img src="assets/${imageName}" alt="${title}">
+            <h2>${title}</h2>
+            <p>${description}</p>
+            <a href="${partnerLink}" target="_blank">Download</a>
+          `;
+          container.appendChild(card);
+        });
+      }).getData();
+    }
+    window.onload = loadData;
+  </script>
 </body>
 </html>
