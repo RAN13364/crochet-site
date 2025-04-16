@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Crochet Patterns</title>
+  <title>Free Crochet Patterns</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -40,8 +40,31 @@
 </head>
 <body>
   <h1>Free Crochet Patterns</h1>
-  <div id="content">
-    <p>Coming soon…</p>
-  </div>
+  <div id="content"><p>Loading...</p></div>
+
+  <script>
+    fetch("https://script.google.com/macros/s/AKfycbwHUaEe7my3CQ85l734-h4Vui23rXF6PZrGukhtORdHz3Tj_gi4RWBgsKCCyWMG3lRL/exec")
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById("content");
+        container.innerHTML = ""; // очистить загрузку
+
+        data.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <h2>${item["Pin Title"]}</h2>
+            <img src="${item["Img"]}" alt="${item["Pin Title"]}" />
+            <p>${item["Pin Description"]}</p>
+            <a href="${item["Partner link"]}" target="_blank">Download on Creative Fabrica</a>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch(error => {
+        document.getElementById("content").innerHTML = "<p>Failed to load data.</p>";
+        console.error("Error loading data:", error);
+      });
+  </script>
 </body>
 </html>
