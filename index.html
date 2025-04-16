@@ -1,75 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Free Crochet Patterns</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background-color: #fff5ec;
+      margin: 0;
       padding: 2rem;
-      background: #fff7f0;
+    }
+
+    h1 {
+      color: #222;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .card h2 {
+      font-size: 1.3rem;
+      margin: 0 0 0.5rem 0;
       color: #333;
     }
-    .card {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+
+    .card p {
+      font-size: 1rem;
+      margin: 0.5rem 0 1rem 0;
+      color: #444;
     }
-    img {
-      max-width: 100%;
-      border-radius: 6px;
-    }
-    h2 {
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-    }
-    a {
+
+    .card a {
       display: inline-block;
-      margin-top: 0.5rem;
-      background: #ff7f50;
+      background-color: #ff774e;
       color: #fff;
       text-decoration: none;
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
+      padding: 0.6rem 1.2rem;
+      border-radius: 5px;
+      transition: background-color 0.2s;
+    }
+
+    .card a:hover {
+      background-color: #e85c33;
     }
   </style>
 </head>
 <body>
   <h1>Free Crochet Patterns</h1>
-  <div id="content"><p>Loading...</p></div>
+  <div id="content"></div>
 
   <script>
-    fetch("https://script.google.com/macros/s/AKfycbwHUaEe7my3CQ85l734-h4Vui23rXF6PZrGukhtORdHz3Tj_gi4RWBgsKCCyWMG3lRL/exec")
-      .then(response => response.json())
-      .then(data => {
+    function loadData() {
+      google.script.run.withSuccessHandler(function(data) {
         const container = document.getElementById("content");
-        container.innerHTML = ""; // Очистить загрузку
-
-        data.forEach(row => {
-          const title = row["Pin Title"];
-          const description = row["Pin Description"];
-          const img = row["Img"];
-          const link = row["Partner link"];
+        data.slice(1).forEach(function(row) {
+          const title = row[0];
+          const description = row[1];
+          const url = row[2];
+          const imageName = row[3]; // D column
+          const partnerLink = row[4];
 
           const card = document.createElement("div");
           card.className = "card";
           card.innerHTML = `
             <h2>${title}</h2>
-            <img src="${img}" alt="${title}" />
+            <img src="assets/${imageName}" alt="${title}">
             <p>${description}</p>
-            <a href="${link}" target="_blank">Download on Creative Fabrica</a>
+            <a href="${partnerLink}" target="_blank">Download on Creative Fabrica</a>
           `;
           container.appendChild(card);
         });
-      })
-      .catch(error => {
-        document.getElementById("content").innerHTML = "<p>Failed to load data.</p>";
-        console.error("Error loading data:", error);
-      });
+      }).getData();
+    }
+
+    window.onload = loadData;
   </script>
 </body>
 </html>
